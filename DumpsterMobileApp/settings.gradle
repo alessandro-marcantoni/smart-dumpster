@@ -1,0 +1,2 @@
+rootProject.name='Dumpster Mobile App'
+include ':app'
