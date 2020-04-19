@@ -1,10 +1,5 @@
 package com.example.dumpstermobileapp.utils;
 
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
-
-import java.io.OutputStream;
 import java.util.UUID;
 
 public class C {

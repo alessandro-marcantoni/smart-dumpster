@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.example.dumpstermobileapp.MainActivity;
+import com.google.common.collect.ImmutableMap;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -15,14 +16,23 @@ import java.util.Map;
 
 public class BluetoothManager {
     private static final String LOG = "BLUETOOTH LOG";
+    private static final Map<Integer, String> MESSAGE_MAP;
+
     private MainActivity activity;
-
     private boolean btIsConnected = false;
-
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothSocket socket;
     private BluetoothDevice device;
     private OutputStream outputStream;
+
+    static {
+        MESSAGE_MAP = ImmutableMap.of(
+                MainActivity.A_BUTTON, "WASTE_A",
+                MainActivity.B_BUTTON, "WASTE_B",
+                MainActivity.C_BUTTON, "WASTE_C",
+                MainActivity.MORE_TIME_BUTTON, "MORE_TIME"
+        );
+    }
 
     public BluetoothManager(MainActivity activity) {
         this.activity = activity;
@@ -78,5 +88,18 @@ public class BluetoothManager {
 
     public AutoCloseable getSocket() {
         return this.socket;
+    }
+
+    public void sendMessage(int message) {
+        if (this.outputStream != null) {
+            byte[] msgBuffer = this.MESSAGE_MAP.get(message).getBytes();
+            try {
+                outputStream.write(msgBuffer);
+            } catch (IOException e) {
+                e.printStackTrace();
+                this.activity.showError("Message could not be send");
+            }
+        }
+
     }
 }

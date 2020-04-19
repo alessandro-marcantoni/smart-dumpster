@@ -28,6 +28,10 @@ import java.util.Map;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
+    public static final int A_BUTTON = 1;
+    public static final int B_BUTTON = 2;
+    public static final int C_BUTTON = 3;
+    public static final int MORE_TIME_BUTTON = 4;
 
     private TextView statusTextView;
     private Button connectButton;
@@ -80,8 +84,37 @@ public class MainActivity extends AppCompatActivity {
                     bluetoothManager.connectToDumpster();
                     if (bluetoothManager.btIsConnected()) {
                         statusTextView.setText(R.string.dumpster_connected);
+                        setButtonsClickable(true);
                     }
                 }
+            }
+        });
+
+        this.aButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bluetoothManager.sendMessage(A_BUTTON);
+            }
+        });
+
+        this.bButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bluetoothManager.sendMessage(B_BUTTON);
+            }
+        });
+
+        this.cButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bluetoothManager.sendMessage(C_BUTTON);
+            }
+        });
+
+        this.timeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bluetoothManager.sendMessage(MORE_TIME_BUTTON);
             }
         });
     }
@@ -123,5 +156,9 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }).show();
+    }
+
+    public void showError(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }
