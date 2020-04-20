@@ -10,13 +10,14 @@ class StartDumpingTask: public Task {
 
 private:
   ServoMotor* servoMotor;
-  Led* led_a;
-  Led* led_b;
-  Led* led_c;
+  Led* ledA;
+  Led* ledB;
+  Led* ledC;
+  long* timeToDump;
   virtual void openHatch(State* state);
 
 public:
-  StartDumpingTask(ServoMotor* servoMotor, Led* led_a, Led* led_b, Led* led_c);
+  StartDumpingTask(ServoMotor* servoMotor, Led* ledA, Led* ledB, Led* ledC, long* timeToDump);
   virtual void init();
   virtual void tick(State* state);
 

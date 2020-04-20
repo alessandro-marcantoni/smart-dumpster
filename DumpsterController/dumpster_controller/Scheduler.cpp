@@ -8,7 +8,7 @@ void Scheduler::init(int basePeriod) {
 }
 
 bool Scheduler::addTask(Task* task) {
-  if (this->nTasks < MAX_TASKS-1) {
+  if (this->nTasks < MAX_TASKS) {
     this->taskList[this->nTasks] = task;
     this->nTasks++;
     return true;

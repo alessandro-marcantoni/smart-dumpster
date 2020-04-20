@@ -1,11 +1,12 @@
 #include "StartDumpingTask.h"
 #include "Arduino.h"
 
-StartDumpingTask::StartDumpingTask(ServoMotor* servoMotor, Led* led_a, Led* led_b, Led* led_c) {
+StartDumpingTask::StartDumpingTask(ServoMotor* servoMotor, Led* ledA, Led* ledB, Led* ledC, long* timeToDump) {
   this->servoMotor = servoMotor;
-  this->led_a = led_a;
-  this->led_b = led_b;
-  this->led_c = led_c;
+  this->ledA = ledA;
+  this->ledB = ledB;
+  this->ledC = ledC;
+  this->timeToDump = timeToDump;
 }
 
 void StartDumpingTask::init() {
@@ -15,22 +16,23 @@ void StartDumpingTask::init() {
 void StartDumpingTask::tick(State* state) {
   if (*state == State::START_DUMPING_A){
     Serial.println("Opening A hatch...");
-    this->led_a->switchOn();
+    this->ledA->switchOn();
     this->openHatch(state);
   }
   if (*state == State::START_DUMPING_B){
     Serial.println("Opening B hatch...");
-    this->led_b->switchOn();
+    this->ledB->switchOn();
     this->openHatch(state);
   }
   if (*state == State::START_DUMPING_C){
     Serial.println("Opening C hatch...");
-    this->led_c->switchOn();
+    this->ledC->switchOn();
     this->openHatch(state);
   }
 }
 
 void StartDumpingTask::openHatch(State* state) {
-  this->servoMotor->setPosition(2250);
+  this->servoMotor->openHatch();
+  *(this->timeToDump) = DUMPING_TIME;
   *state = State::DUMPING;
 }

@@ -3,6 +3,8 @@
 
 #include "State.h"
 
+#define DUMPING_TIME 10000
+
 class Task {
 
 public:

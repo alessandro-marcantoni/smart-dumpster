@@ -12,9 +12,10 @@ private:
 
 public:
   ServoMotor(int pin);
-  void setPosition(int angle);
-  void on();
-  void off();
+  virtual void openHatch();
+  virtual void closeHatch();
+  virtual void on();
+  virtual void off();
 
 };
 
