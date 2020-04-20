@@ -1,0 +1,6 @@
+#ifndef __STATE__
+#define __STATE__
+
+enum class State {DETECTING_COMMANDS, START_DUMPING_A, START_DUMPING_B, START_DUMPING_C, STOP_DUMPING, DUMPING};
+
+#endif
