@@ -27,10 +27,10 @@ public class BluetoothManager {
 
     static {
         MESSAGE_MAP = ImmutableMap.of(
-                MainActivity.A_BUTTON, "WASTE_A",
-                MainActivity.B_BUTTON, "WASTE_B",
-                MainActivity.C_BUTTON, "WASTE_C",
-                MainActivity.MORE_TIME_BUTTON, "MORE_TIME"
+                MainActivity.A_BUTTON, "W_A",
+                MainActivity.B_BUTTON, "W_B",
+                MainActivity.C_BUTTON, "W_C",
+                MainActivity.MORE_TIME_BUTTON, "M_T"
         );
     }
 
