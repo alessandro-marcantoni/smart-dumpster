@@ -12,11 +12,12 @@ class DetectingCommandsTask: public Task {
 
 private:
   SoftwareSerial* serial;
+  long* timeToDump;
   String command;
   virtual void handleCommand(String command, State* state);
 
 public:
-  DetectingCommandsTask(int RxPin, int TxPin);
+  DetectingCommandsTask(int RxPin, int TxPin, long* timeToDump);
   virtual void init();
   virtual void tick(State* state);
 

@@ -4,6 +4,7 @@
 #include "State.h"
 
 #define DUMPING_TIME 10000
+#define ADDITIONAL_TIME 5000
 
 class Task {
 

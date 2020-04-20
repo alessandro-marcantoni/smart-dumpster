@@ -33,7 +33,7 @@ void setup() {
   const int basePeriod = 100;
   scheduler.init(basePeriod);
 
-  Task* t0 = new DetectingCommandsTask(RxD, TxD);
+  Task* t0 = new DetectingCommandsTask(RxD, TxD, &timeToDump);
   t0->init();
   scheduler.addTask(t0);
 

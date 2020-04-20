@@ -9,10 +9,6 @@ DumpingTask::DumpingTask(long* timeToDump) {
 void DumpingTask::init() {}
 
 void DumpingTask::tick(State* state) {
-  if (*state == State::STOP_DUMPING) {
-    Serial.println("Still dumping");
-  }
-
   if (*state == State::DUMPING) {
     if (this->lastTime == 0) {
       this->lastTime = millis();
