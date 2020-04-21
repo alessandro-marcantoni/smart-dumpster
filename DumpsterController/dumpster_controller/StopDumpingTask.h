@@ -6,6 +6,9 @@
 #include "ServoMotor.h"
 #include "Led.h"
 
+/**
+ * The task that ends the dumping transaction.
+ */
 class StopDumpingTask: public Task {
 
 private:

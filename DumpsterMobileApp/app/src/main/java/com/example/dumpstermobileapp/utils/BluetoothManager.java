@@ -14,6 +14,9 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Manages the bluetooth connection and transactions.
+ */
 public class BluetoothManager {
     private static final String LOG = "BLUETOOTH LOG";
     private static final Map<Integer, String> MESSAGE_MAP;
@@ -38,6 +41,9 @@ public class BluetoothManager {
         this.activity = activity;
     }
 
+    /**
+     * Creates a connection to the Smart Dumpster.
+     */
     public void connectToDumpster() {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter != null) {
@@ -82,14 +88,29 @@ public class BluetoothManager {
         }
     }
 
+    /**
+     * Checks if you are connected to the Smart Dumpster.
+     *
+     * @return True if you are connected, False otherwise.
+     */
     public boolean btIsConnected() {
         return this.btIsConnected;
     }
 
+    /**
+     * Returns the socket of the bluetooth connection.
+     *
+     * @return The socket.
+     */
     public AutoCloseable getSocket() {
         return this.socket;
     }
 
+    /**
+     * Sends a message to the Smart Dumpster.
+     *
+     * @param message The constant that represents the command.
+     */
     public void sendMessage(int message) {
         if (this.outputStream != null) {
             byte[] msgBuffer = this.MESSAGE_MAP.get(message).getBytes();

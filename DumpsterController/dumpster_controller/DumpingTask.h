@@ -4,6 +4,9 @@
 #include "Task.h"
 #include "State.h"
 
+/**
+ * The task that tracks the dumping time.
+ */
 class DumpingTask: public Task {
 
 private:

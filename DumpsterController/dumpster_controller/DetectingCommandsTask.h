@@ -6,7 +6,7 @@
 #include "State.h"
 
 /**
- * The task that detects commands.
+ * The task that detects and handles commands.
  */
 class DetectingCommandsTask: public Task {
 

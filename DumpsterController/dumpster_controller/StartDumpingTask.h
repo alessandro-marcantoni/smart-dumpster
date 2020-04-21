@@ -6,6 +6,9 @@
 #include "ServoMotor.h"
 #include "Led.h"
 
+/**
+ * The task that starts the dumping transaction.
+ */
 class StartDumpingTask: public Task {
 
 private:

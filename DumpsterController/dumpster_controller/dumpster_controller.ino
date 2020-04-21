@@ -1,3 +1,10 @@
+/**
+ * This is the "Dumpster Controller" that simulates
+ * a Smart Dumpster on a Arduino UNO bard.
+ * 
+ * @author alessandr.marcanton2@studio.unibo.it
+ */
+
 #include "Scheduler.h"
 #include "DetectingCommandsTask.h"
 #include "StartDumpingTask.h"
@@ -33,6 +40,7 @@ void setup() {
   const int basePeriod = 100;
   scheduler.init(basePeriod);
 
+  // Create and add the tasks to the scheduler.
   Task* t0 = new DetectingCommandsTask(RxD, TxD, &timeToDump);
   t0->init();
   scheduler.addTask(t0);

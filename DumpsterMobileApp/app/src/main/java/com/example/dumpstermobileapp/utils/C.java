@@ -2,6 +2,9 @@ package com.example.dumpstermobileapp.utils;
 
 import java.util.UUID;
 
+/**
+ * Class containing some useful constants.
+ */
 public class C {
 
     public static class Bluetooth {

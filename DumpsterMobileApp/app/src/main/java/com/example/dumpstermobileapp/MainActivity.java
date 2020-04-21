@@ -1,11 +1,15 @@
+/**
+ * This is the "Dumpster Mobile App" that connects to
+ * the Smart Dumpster and makes it possible to send commands to it.
+ *
+ * @author alessandr.marcanton2@studio.unibo.it
+ */
+
 package com.example.dumpstermobileapp;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -18,14 +22,6 @@ import android.widget.Toast;
 import com.example.dumpstermobileapp.utils.BluetoothManager;
 import com.example.dumpstermobileapp.utils.C;
 import com.google.android.material.snackbar.Snackbar;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
     public static final int A_BUTTON = 1;
@@ -65,6 +61,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Init the UI and the listeners.
+     */
     private void initViews() {
         this.statusTextView = findViewById(R.id.statusTextView);
         this.connectButton = findViewById(R.id.connectButton);
