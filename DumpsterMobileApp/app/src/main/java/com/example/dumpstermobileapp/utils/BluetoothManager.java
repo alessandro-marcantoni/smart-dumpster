@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.dumpstermobileapp.MainActivity;
@@ -45,47 +46,8 @@ public class BluetoothManager {
      * Creates a connection to the Smart Dumpster.
      */
     public void connectToDumpster() {
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (bluetoothAdapter != null) {
-            if (!bluetoothAdapter.isEnabled()) {
-                final Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                this.activity.startActivityForResult(enableBtIntent, C.Bluetooth.REQUEST_ENABLE_BT);
-            } else {
-                final Map<String, BluetoothDevice> map = new HashMap<>();
-                for (BluetoothDevice bt : bluetoothAdapter.getBondedDevices()) {
-                    map.put(bt.getName(), bt);
-                }
-                if (!map.keySet().contains(C.Bluetooth.DEVICE)) {
-                    Log.e(this.LOG, "Dumpster not paired");
-                    this.activity.showPairingOption();
-                } else {
-                    this.device = bluetoothAdapter.getRemoteDevice(map.get(C.Bluetooth.DEVICE).toString());
-                    if (this.device != null) {
-                        try {
-                            this.socket = this.device.createRfcommSocketToServiceRecord(C.Bluetooth.uuid);
-                            Log.e(this.LOG, "Socket done " + map.get(C.Bluetooth.DEVICE).toString());
-                        } catch (IOException e){
-                            e.printStackTrace();
-                        }
-                    }
-                    if (this.socket != null) {
-                        try {
-                            this.socket.connect();
-                            Log.e(this.LOG, "Connection done");
-                            this.outputStream = this.socket.getOutputStream();
-                            this.btIsConnected = true;
-                        } catch (IOException e){
-                            e.printStackTrace();
-                            try {
-                                this.socket.close();
-                            } catch (IOException cE){
-                                cE.printStackTrace();
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        ConnectionTask connectionTask = new ConnectionTask();
+        connectionTask.execute();
     }
 
     /**
@@ -112,15 +74,76 @@ public class BluetoothManager {
      * @param message The constant that represents the command.
      */
     public void sendMessage(int message) {
-        if (this.outputStream != null) {
-            byte[] msgBuffer = this.MESSAGE_MAP.get(message).getBytes();
-            try {
-                outputStream.write(msgBuffer);
-            } catch (IOException e) {
-                e.printStackTrace();
-                this.activity.showError("Message could not be send");
+        if (this.btIsConnected()) {
+            if (this.outputStream != null) {
+                byte[] msgBuffer = this.MESSAGE_MAP.get(message).getBytes();
+                try {
+                    outputStream.write(msgBuffer);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    this.activity.showError("Message could not be send");
+                }
             }
         }
+    }
 
+    private void notifyConnected() {
+        this.activity.connectionDone();
+    }
+
+    private class ConnectionTask extends AsyncTask<Void, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            if (bluetoothAdapter != null) {
+                if (!bluetoothAdapter.isEnabled()) {
+                    final Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                    activity.startActivityForResult(enableBtIntent, C.Bluetooth.REQUEST_ENABLE_BT);
+                } else {
+                    final Map<String, BluetoothDevice> map = new HashMap<>();
+                    for (BluetoothDevice bt : bluetoothAdapter.getBondedDevices()) {
+                        map.put(bt.getName(), bt);
+                    }
+                    if (!map.keySet().contains(C.Bluetooth.DEVICE)) {
+                        Log.e(LOG, "Dumpster not paired");
+                        activity.showBluetoothPairingOption();
+                    } else {
+                        device = bluetoothAdapter.getRemoteDevice(map.get(C.Bluetooth.DEVICE).toString());
+                        if (device != null) {
+                            try {
+                                socket = device.createRfcommSocketToServiceRecord(C.Bluetooth.uuid);
+                                Log.e(LOG, "Socket done " + map.get(C.Bluetooth.DEVICE).toString());
+                            } catch (IOException e){
+                                e.printStackTrace();
+                            }
+                        }
+                        if (socket != null) {
+                            try {
+                                socket.connect();
+                                Log.e(LOG, "Connection done");
+                                outputStream = socket.getOutputStream();
+                                btIsConnected = true;
+                            } catch (IOException e){
+                                e.printStackTrace();
+                                try {
+                                    socket.close();
+                                } catch (IOException cE){
+                                    cE.printStackTrace();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return btIsConnected;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (result) {
+                notifyConnected();
+            }
+        }
     }
 }

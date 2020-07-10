@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.example.dumpstermobileapp.utils.BluetoothManager;
 import com.example.dumpstermobileapp.utils.C;
+import com.example.dumpstermobileapp.utils.HttpManager;
 import com.google.android.material.snackbar.Snackbar;
 
 public class MainActivity extends AppCompatActivity {
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private Button timeButton;
 
     private BluetoothManager bluetoothManager;
+    private HttpManager httpManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,19 +47,45 @@ public class MainActivity extends AppCompatActivity {
 
         this.initViews();
         this.bluetoothManager = new BluetoothManager(this);
+        this.httpManager = new HttpManager(this);
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onResume() {
+        super.onResume();
 
+        this.httpManager.registerNetworkCallback();
+        //this.httpManager.checkConnection();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        this.httpManager.unregisterNetworkCallback();
         final AutoCloseable socket = this.bluetoothManager.getSocket();
         if (socket != null) {
             try {
                 this.bluetoothManager.getSocket().close();
+                statusTextView.setText("Status: not connected");
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public void connectionDone() {
+        if (bluetoothManager.btIsConnected()) {
+            statusTextView.setText(R.string.dumpster_connected);
+            setButtonsClickable(true);
+        }
+    }
+
+    public void onResponseAvailability() {
+        if (!isDumpsterAvailable()) {
+            statusTextView.setText(R.string.dumpster_not_available);
+        } else {
+            bluetoothManager.connectToDumpster();
         }
     }
 
@@ -72,19 +100,12 @@ public class MainActivity extends AppCompatActivity {
         this.cButton = findViewById(R.id.cButton);
         this.timeButton = findViewById(R.id.timeButton);
 
-        this.setButtonsClickable(false);
-
         this.connectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!isDumpsterAvailable()) {
-                    statusTextView.setText(R.string.dumpster_not_available);
-                } else {
-                    bluetoothManager.connectToDumpster();
-                    if (bluetoothManager.btIsConnected()) {
-                        statusTextView.setText(R.string.dumpster_connected);
-                        setButtonsClickable(true);
-                    }
+                //httpManager.checkConnection();
+                if (httpManager.isNetworkConnected()) {
+                    httpManager.checkAvailable();
                 }
             }
         });
@@ -93,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 bluetoothManager.sendMessage(A_BUTTON);
+                //httpManager.throwSuccess();
             }
         });
 
@@ -100,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 bluetoothManager.sendMessage(B_BUTTON);
+                //httpManager.throwSuccess();
             }
         });
 
@@ -107,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 bluetoothManager.sendMessage(C_BUTTON);
+                //httpManager.throwSuccess();
             }
         });
 
@@ -116,6 +140,8 @@ public class MainActivity extends AppCompatActivity {
                 bluetoothManager.sendMessage(MORE_TIME_BUTTON);
             }
         });
+
+        this.setButtonsClickable(false);
     }
 
     private void setButtonsClickable(Boolean clickable) {
@@ -126,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean isDumpsterAvailable() {
-        return true;
+        return this.httpManager.isDumpsterAvailable();
     }
 
     @Override
@@ -141,13 +167,29 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void showPairingOption() {
-        Snackbar.make(findViewById(R.id.activity_main), "The dumpster has not ben paired yet", Snackbar.LENGTH_INDEFINITE)
+    public void showBluetoothPairingOption() {
+        Snackbar.make(findViewById(R.id.activity_main), "The dumpster has not been paired yet", Snackbar.LENGTH_INDEFINITE)
                 .setAction("SETTINGS", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         final Intent intent = new Intent();
                         intent.setAction(Settings.ACTION_BLUETOOTH_SETTINGS);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                        if (intent.resolveActivity(getPackageManager()) != null) {
+                            startActivity(intent);
+                        }
+                    }
+                }).show();
+    }
+
+    public void showHttpPairingOption() {
+        Snackbar.make(findViewById(R.id.activity_main), "You are not connected to the internet", Snackbar.LENGTH_INDEFINITE)
+                .setAction("SETTINGS", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final Intent intent = new Intent();
+                        intent.setAction(Settings.ACTION_WIRELESS_SETTINGS);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
                         if (intent.resolveActivity(getPackageManager()) != null) {
