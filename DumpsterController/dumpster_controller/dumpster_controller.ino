@@ -1,8 +1,6 @@
 /**
  * This is the "Dumpster Controller" that simulates
  * a Smart Dumpster on a Arduino UNO bard.
- * 
- * @author alessandr.marcanton2@studio.unibo.it
  */
 
 #include "Scheduler.h"
