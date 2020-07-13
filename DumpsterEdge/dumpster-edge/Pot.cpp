@@ -19,5 +19,5 @@ int Pot::hasChanged() {
 }
 
 int Pot::getValue() {
-  return this->value;
+  return map(this->value, 0, 1023, 0, 100);
 }
