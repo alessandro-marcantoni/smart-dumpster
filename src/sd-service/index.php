@@ -11,5 +11,6 @@
      */
 
     $templateParams["DATA_FILE"] = "dumpster-data.json";
+    $templateParams["AVAILABILITY_FILE"] = "dumpster-availability.json";
 
 ?>

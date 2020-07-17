@@ -31,5 +31,5 @@ void loop() {
     greenLed->switchOff();
     redLed->switchOn();
   }
-  delay(1000);
+  delay(3000);
 }

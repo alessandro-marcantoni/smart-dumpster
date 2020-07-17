@@ -29,8 +29,8 @@ import java.util.Map;
 public class HttpManager {
     private final static String TAG = "HTTP REQUEST";
     private static final String LOG = "HTTP LOG";
-    private static final String THROW_SUCCESS_URL = "http://192.168.1.201/dumpster-service/on-throw-success.php";
-    private static final String IS_AVAILABLE_URL = "http://192.168.1.201/dumpster-service/is-dumpster-available.php";
+    private static final String THROW_SUCCESS_URL = "http://192.168.1.201/sd-service/on-throw-success.php";
+    private static final String IS_AVAILABLE_URL = "http://192.168.1.201/sd-service/is-dumpster-available.php";
     private static final Map<String, Pair<String, String>> HTTP_REQUESTS;
 
     static {

@@ -10,8 +10,8 @@
 /* WPA2 PSK password */
 #define pwd "19641964"
 
-#define DUMPSTER_AVAILABLE "http://192.168.1.201/dumpster-service/is-dumpster-available.php"
-#define UPDATE_WEIGHT "http://192.168.1.201/dumpster-service/update-weight.php"
+#define DUMPSTER_AVAILABLE "http://192.168.1.201/sd-service/is-dumpster-available.php"
+#define UPDATE_WEIGHT "http://192.168.1.201/sd-service/update-weight.php"
 
 class HttpManager {
 

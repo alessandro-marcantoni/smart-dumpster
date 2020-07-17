@@ -36,6 +36,8 @@ void HttpManager::sendWeight(int value) {
   this->http.begin(UPDATE_WEIGHT);
   this->http.addHeader("Content-Type", "application/json");
   int httpCode = this->http.POST(msg);
+  Serial.println(httpCode);
+  Serial.println(this->http.getString());
   this->http.end();
 }
 

@@ -7,7 +7,7 @@
     require_once "index.php";
 
     if($_SERVER["REQUEST_METHOD"] == "GET") {
-        $data = json_decode(file_get_contents($templateParams["DATA_FILE"]), TRUE);
+        $data = json_decode(file_get_contents($templateParams["AVAILABILITY_FILE"]), TRUE);
         $string = $data["available"] == TRUE ? "AV" : "UN";
         header('Content-type: application/json');
         $state = json_encode(array("available" => $string));
