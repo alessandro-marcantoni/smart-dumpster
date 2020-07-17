@@ -24,6 +24,8 @@ import com.example.dumpstermobileapp.utils.C;
 import com.example.dumpstermobileapp.utils.HttpManager;
 import com.google.android.material.snackbar.Snackbar;
 
+import unibo.btlib.exceptions.BluetoothDeviceNotFound;
+
 public class MainActivity extends AppCompatActivity {
     public static final int A_BUTTON = 1;
     public static final int B_BUTTON = 2;
@@ -53,31 +55,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
         this.httpManager.registerNetworkCallback();
-        //this.httpManager.checkConnection();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-
         this.httpManager.unregisterNetworkCallback();
-        final AutoCloseable socket = this.bluetoothManager.getSocket();
-        if (socket != null) {
-            try {
-                this.bluetoothManager.getSocket().close();
-                statusTextView.setText("Status: not connected");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     public void connectionDone() {
         if (bluetoothManager.btIsConnected()) {
             statusTextView.setText(R.string.dumpster_connected);
-            setButtonsClickable(true);
+            readyToDump();
         }
     }
 
@@ -85,8 +75,16 @@ public class MainActivity extends AppCompatActivity {
         if (!isDumpsterAvailable()) {
             statusTextView.setText(R.string.dumpster_not_available);
         } else {
-            bluetoothManager.connectToDumpster();
+            try {
+                bluetoothManager.connectToDumpster();
+            } catch (BluetoothDeviceNotFound bluetoothDeviceNotFound) {
+                bluetoothDeviceNotFound.printStackTrace();
+            }
         }
+    }
+
+    public void dumpSuccessful() {
+        this.httpManager.throwSuccess();
     }
 
     /**
@@ -114,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 bluetoothManager.sendMessage(A_BUTTON);
-                //httpManager.throwSuccess();
+                dumping();
             }
         });
 
@@ -122,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 bluetoothManager.sendMessage(B_BUTTON);
-                //httpManager.throwSuccess();
+                dumping();
             }
         });
 
@@ -130,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 bluetoothManager.sendMessage(C_BUTTON);
-                //httpManager.throwSuccess();
+                dumping();
             }
         });
 
@@ -141,18 +139,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        this.setButtonsClickable(false);
-    }
-
-    private void setButtonsClickable(Boolean clickable) {
-        this.aButton.setClickable(clickable);
-        this.bButton.setClickable(clickable);
-        this.cButton.setClickable(clickable);
-        this.timeButton.setClickable(clickable);
-    }
-
-    private boolean isDumpsterAvailable() {
-        return this.httpManager.isDumpsterAvailable();
+        this.notConnected();
     }
 
     @Override
@@ -201,5 +188,29 @@ public class MainActivity extends AppCompatActivity {
 
     public void showError(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    private void notConnected() {
+        this.aButton.setClickable(false);
+        this.bButton.setClickable(false);
+        this.cButton.setClickable(false);
+        this.timeButton.setClickable(false);
+    }
+
+    public void readyToDump() {
+        this.aButton.setClickable(true);
+        this.bButton.setClickable(true);
+        this.cButton.setClickable(true);
+    }
+
+    private void dumping() {
+        this.aButton.setClickable(false);
+        this.bButton.setClickable(false);
+        this.cButton.setClickable(false);
+        this.timeButton.setClickable(true);
+    }
+
+    private boolean isDumpsterAvailable() {
+        return this.httpManager.isDumpsterAvailable();
     }
 }

@@ -1,8 +1,8 @@
 #include "DetectingCommandsTask.h"
 #include "Arduino.h"
 
-DetectingCommandsTask::DetectingCommandsTask(int RxPin, int TxPin, long* timeToDump) {
-  this->serial = new SoftwareSerial(TxPin, RxPin);
+DetectingCommandsTask::DetectingCommandsTask(SoftwareSerial* softwareSerial, long* timeToDump) {
+  this->serial = softwareSerial;
   this->timeToDump = timeToDump;
 }
 
@@ -23,17 +23,17 @@ void DetectingCommandsTask::tick(State* state) {
 
 void DetectingCommandsTask::handleCommand(String command, State* state) {
   if (*state == State::DETECTING_COMMANDS) {
-    if (command == "W_A") {
+    if (command == A) {
       *state = State::START_DUMPING_A;
     }
-    if (command == "W_B") {
+    if (command == B) {
       *state = State::START_DUMPING_B;
     }
-    if (command == "W_C") {
+    if (command == C) {
       *state = State::START_DUMPING_C;
     }
   } else if (*state == State::DUMPING) {
-    if (command == "M_T") {
+    if (command == T) {
       Serial.println("Request of addictional time accepted.");
       *(this->timeToDump) += ADDITIONAL_TIME;
     }

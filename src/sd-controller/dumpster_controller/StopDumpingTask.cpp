@@ -1,7 +1,8 @@
 #include "StopDumpingTask.h"
 #include "Arduino.h"
 
-StopDumpingTask::StopDumpingTask(ServoMotor* servoMotor, Led* ledA, Led* ledB, Led* ledC) {
+StopDumpingTask::StopDumpingTask(SoftwareSerial* softwareSerial, ServoMotor* servoMotor, Led* ledA, Led* ledB, Led* ledC) {
+  this->softwareSerial = softwareSerial;
   this->servoMotor = servoMotor;
   this->ledA = ledA;
   this->ledB = ledB;
@@ -22,5 +23,7 @@ void StopDumpingTask::tick(State* state) {
 void StopDumpingTask::closeHatch(State* state) {
   Serial.println("Closing the hatch...");
   this->servoMotor->closeHatch();
+  int byteSent = this->softwareSerial->println(D);
+  Serial.println(byteSent);
   *state = State::DETECTING_COMMANDS;
 }

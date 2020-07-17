@@ -19,6 +19,7 @@
 #define LED_PIN_C 9
 
 Scheduler scheduler;
+SoftwareSerial* softwareSerial;
 Led* ledA;
 Led* ledB;
 Led* ledC;
@@ -29,6 +30,7 @@ void setup() {
   Serial.begin(9600);
   while (!Serial) {}
 
+  softwareSerial = new SoftwareSerial(TxD, RxD);
   ledA = new Led(LED_PIN_A);
   ledB = new Led(LED_PIN_B);
   ledC = new Led(LED_PIN_C);
@@ -39,7 +41,7 @@ void setup() {
   scheduler.init(basePeriod);
 
   // Create and add the tasks to the scheduler.
-  Task* t0 = new DetectingCommandsTask(RxD, TxD, &timeToDump);
+  Task* t0 = new DetectingCommandsTask(softwareSerial, &timeToDump);
   t0->init();
   scheduler.addTask(t0);
 
@@ -51,7 +53,7 @@ void setup() {
   t2->init();
   scheduler.addTask(t2);
 
-  Task* t3 = new StopDumpingTask(motor, ledA, ledB, ledC);
+  Task* t3 = new StopDumpingTask(softwareSerial, motor, ledA, ledB, ledC);
   t3->init();
   scheduler.addTask(t3);
 

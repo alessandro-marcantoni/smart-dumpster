@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
 import android.util.Pair;
@@ -64,20 +63,6 @@ public class HttpManager {
         this.activity = activity;
         this.requestQueue = Volley.newRequestQueue(this.activity);
     }
-
-    /*public void checkConnection() {
-        ConnectivityManager connectivityManager = (ConnectivityManager)this.activity.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        if (networkInfo != null) {
-            this.isNetworkConnected = networkInfo.isConnectedOrConnecting();
-            if (!this.isNetworkConnected) {
-                this.activity.showHttpPairingOption();
-            }
-        } else {
-            this.isNetworkConnected = false;
-            this.activity.showHttpPairingOption();
-        }
-    }*/
 
     public boolean isNetworkConnected() {
         return this.isNetworkConnected;
