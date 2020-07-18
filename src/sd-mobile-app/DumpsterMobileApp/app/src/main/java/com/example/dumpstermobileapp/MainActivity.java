@@ -201,6 +201,7 @@ public class MainActivity extends AppCompatActivity {
         this.aButton.setClickable(true);
         this.bButton.setClickable(true);
         this.cButton.setClickable(true);
+        this.timeButton.setClickable(false);
     }
 
     private void dumping() {
