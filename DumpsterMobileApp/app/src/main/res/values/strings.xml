@@ -1,9 +1,0 @@
-<resources>
-    <string name="app_name">Dumpster Mobile App</string>
-    <string name="status_not_connected">Status: not connected</string>
-    <string name="connect_to_dumpster">CONNECT TO DUMPSTER</string>
-    <string name="a">A</string>
-    <string name="c">C</string>
-    <string name="b">B</string>
-    <string name="i_need_more_time">I NEED MORE TIME</string>
-</resources>

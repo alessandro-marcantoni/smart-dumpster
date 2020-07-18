@@ -1,0 +1,35 @@
+* {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+h1 {
+    text-align: center;
+}
+
+p {
+    font-size: 150%;
+}
+
+button.available {
+    border-radius: 5px;
+    padding: 1.5%;
+    color: white;
+    border: none;
+    width: 100%;
+    font-size: 100%;
+}
+
+button.available:focus {
+    border: none;
+}
+
+button.chart {
+    border: none;
+    border-radius: 5px;
+    margin-left: 1%;
+    padding: 0.4%;
+}
+
+button.chart:hover {
+    background-color: lightgray;
+}
