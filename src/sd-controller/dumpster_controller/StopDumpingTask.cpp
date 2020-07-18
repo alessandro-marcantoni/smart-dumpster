@@ -23,7 +23,6 @@ void StopDumpingTask::tick(State* state) {
 void StopDumpingTask::closeHatch(State* state) {
   Serial.println("Closing the hatch...");
   this->servoMotor->closeHatch();
-  int byteSent = this->softwareSerial->println(D);
-  Serial.println(byteSent);
+  this->softwareSerial->println(D);
   *state = State::DETECTING_COMMANDS;
 }
